@@ -6,7 +6,7 @@
 /*   By: gson <gson@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 19:35:20 by gson              #+#    #+#             */
-/*   Updated: 2022/03/04 18:19:08 by gson             ###   ########.fr       */
+/*   Updated: 2022/03/04 19:49:22 by gson             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	handler(int	signo)
 		ft_putstr_fd("Total receive: ", 1);
 		ft_putnbr_fd(cnt, 1);
 		ft_putstr_fd("byte\n", 1);
+		exit(0);
 	}
 }
 

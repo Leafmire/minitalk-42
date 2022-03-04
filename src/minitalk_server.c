@@ -6,12 +6,24 @@
 /*   By: gson <gson@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 19:20:33 by gson              #+#    #+#             */
-/*   Updated: 2022/03/04 18:21:20 by gson             ###   ########.fr       */
+/*   Updated: 2022/03/04 19:52:24 by gson             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 #include "libft.h"
+
+int	print_character(int pid, char c)
+{
+	if (c == 0)
+	{
+		kill(pid, SIGUSR2);
+		return (1);
+	}
+	ft_putchar_fd(c, 1);
+	kill(pid, SIGUSR1);
+	return (0);
+}
 
 void	handler(int	signo, siginfo_t *info, void *context)
 {
@@ -21,22 +33,20 @@ void	handler(int	signo, siginfo_t *info, void *context)
 
 	(void)context;
 	pid = info->si_pid;
-	if (i == 8)
-	{
-		ft_putchar_fd(c, 1);
-		if (c != 0)
-			kill(pid, SIGUSR1);
-		else
-			kill(pid, SIGUSR2);
-		c = 0;
-		i = 0;
-	}
-	if (i < 8)
+	if (i == 7)
 	{
 		if (signo == SIGUSR1)
 			c |= 1;
-		if (i != 7)
-			c <<= 1;
+		i = 0;
+		if (print_character(pid, c) == 1)
+			return ;
+		c = 0;
+	}
+	else
+	{
+		if (signo == SIGUSR1)
+			c |= 1;
+		c <<= 1;
 		i++;
 	}
 }
@@ -56,7 +66,7 @@ int	main(void)
 	pid = getpid();
 	print_pid(pid);
 	act.sa_flags = SA_SIGINFO;
-	act.sa_handler = handler;
+	act.sa_sigaction = handler;
 	sigaction(SIGUSR1, &act, (struct sigaction *) NULL);
 	sigaction(SIGUSR2, &act, (struct sigaction *) NULL);
 	while (1)
