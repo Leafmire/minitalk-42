@@ -13,6 +13,9 @@
 SERVER = server
 CLIENT = client
 
+SERVER_BONUS = server_bonus
+CLIENT_BONUS = client_bonus
+
 SRC_DIR = ./src/
 INC_DIR = ./include/
 
@@ -24,6 +27,15 @@ CLIENT_SRCS = $(addprefix $(SRC_DIR), $(CLIENT_SRC))
 
 SERVER_OBJS = $(SERVER_SRCS:.c=.o)
 CLIENT_OBJS = $(CLIENT_SRCS:.c=.o)
+
+SERVER_BONUS_SRC = minitalk_server_bonus.c
+CLIENT_BONUS_SRC = minitalk_client_bonus.c
+
+SERVER_BONUS_SRCS = $(addprefix $(SRC_DIR), $(SERVER_BONUS_SRC))
+CLIENT_BONUS_SRCS = $(addprefix $(SRC_DIR), $(CLIENT_BONUS_SRC))
+
+SERVER_BONUS_OBJS = $(SERVER_SRCS:.c=.o)
+CLIENT_BONUS_OBJS = $(CLIENT_SRCS:.c=.o)
 
 LIBS	 = -L./libft -lft
 
@@ -41,14 +53,24 @@ $(CLIENT) : $(CLIENT_OBJS)
 		make -C libft
 		$(CC) -o $(CLIENT) $(CLIENT_OBJS) $(LIBS)
 
+$(SERVER_BONUS) : $(SERVER_BONUS_OBJS)
+		make -C libft
+		$(CC) -o server $(SERVER_BONUS_OBJS) $(LIBS)
+
+$(CLIENT_BONUS) : $(CLIENT_BONUS_OBJS)
+		make -C libft
+		$(CC) -o client $(CLIENT_BONUS_OBJS) $(LIBS)
+
 %.o: %.c
 		gcc $(CFLAGS) -I $(INC_DIR) -c $< -o $@
+
+bonus : $(SERVER_BONUS) $(CLIENT_BONUS)
 
 all : $(SERVER) $(CLIENT)
 
 clean :
 		make -C libft clean
-		rm -f $(SERVER_OBJS) $(CLIENT_OBJS)
+		rm -f $(SERVER_OBJS) $(CLIENT_OBJS) $(SERVER_BONUS_OBJS) $(CLIENT_BONUS_OBJS)
 
 fclean : clean
 		make -C libft fclean
